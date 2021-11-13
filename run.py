@@ -14,7 +14,11 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('easy_groceries')
 
-chow_mein = SHEET.worksheet('chow_mein')
 
-data = chow_mein.get_all_values()
-print(data)
+def get_dish_type(dish_type):
+    """
+    Get list of recipes of specific type
+    """
+    meals_list = SHEET.worksheet(dish_type)
+    data = meals_list.get_all_values()
+    print(data)
