@@ -17,7 +17,7 @@ SHEET = GSPREAD_CLIENT.open('easy_groceries')
 
 def choose_meals():
     """
-    Print dish type options to the user and get user option
+    Print dish type options to the user and get user choice
     """
     print('Please select a dish type:')
     print('Type 1 for Vegetarian')
@@ -25,8 +25,22 @@ def choose_meals():
     print('Type 3 for Beef')
     print('Type 4 for Fish')
 
-    user_option = input('Enter your option here: ')
-    print(f'You typed: {user_option}')
+    user_choice = input('Enter your option here: ')
+    validate_data(user_choice)
+
+
+def validate_data(value):
+    """
+    From inside the try converts value to integer.
+    Raises ValueError if value is not an integer between 1 and 4
+    """
+    try:
+        if int(value) < 1 or int(value) > 4:
+            raise ValueError(
+                f'Choose an option between 1 and 4, you choose {int(value)}'
+            )
+    except ValueError as e:
+        print(f'Invalid data: {e}, please try again.\n')
 
 
 def get_dish_type(dish_type):
