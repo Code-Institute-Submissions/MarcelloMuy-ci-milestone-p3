@@ -19,14 +19,18 @@ def choose_meals():
     """
     Print dish type options to the user and get user choice
     """
-    print('Please select a dish type:')
-    print('Type 1 for Vegetarian')
-    print('Type 2 for Chicken')
-    print('Type 3 for Beef')
-    print('Type 4 for Fish')
+    while True:
+        print('Please select a dish type:')
+        print('Type 1 for Vegetarian')
+        print('Type 2 for Chicken')
+        print('Type 3 for Beef')
+        print('Type 4 for Fish')
 
-    user_choice = input('Enter your option here: ')
-    validate_data(user_choice)
+        user_choice = input('Enter your option here: ')
+
+        if validate_data(user_choice):
+            print('Data is valid!')
+            break
 
 
 def validate_data(value):
@@ -41,6 +45,9 @@ def validate_data(value):
             )
     except ValueError as e:
         print(f'Invalid data: {e}, please try again.\n')
+        return False
+
+    return True
 
 
 def get_dish_type(dish_type):
