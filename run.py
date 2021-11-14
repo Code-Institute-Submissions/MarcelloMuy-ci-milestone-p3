@@ -29,7 +29,7 @@ def choose_meals():
 
         user_choice = input('Enter your option here: ')
 
-        if validate_data(user_choice):
+        if validate_data(user_choice, 4):
             int_choice = int(user_choice)
             str_user_choice = get_dish_type(int_choice)
             print(f'You choose {str_user_choice}\n')
@@ -38,44 +38,28 @@ def choose_meals():
     while True:
         recipes_dict = create_dict_recipes(str_user_choice)
         choose_meals.recipes_list = list(recipes_dict.keys())
-        print('Plese type recipe number to add it to groceries list.\n')
+        list_len = len(choose_meals.recipes_list)
+        print('Plese type recipe value number to add it to groceries list.\n')
         print(f'{recipes_dict}\n')
 
         dish_choice = input('Enter your choice here: ')
 
-        if validate_dish_choice(dish_choice):
+        if validate_data(dish_choice, list_len):
             print(choose_meals.recipes_list[int(dish_choice) - 1])
             break
 
 
-def validate_data(value):
+def validate_data(value, length):
     """
     From inside the try converts value to integer.
-    Raises ValueError if value is not an integer between 1 and 4.
+    Raises ValueError if value is not an integer between 1 and
+    paramenter length.
     """
     try:
-        if int(value) < 1 or int(value) > 4:
+        if int(value) < 1 or int(value) > length:
             raise ValueError(
-                f'Pick a number between 1 and 4, you choose {int(value)}'
-            )
-    except ValueError as e:
-        print(f'Invalid data: {e}, please try again.\n')
-        return False
-
-    return True
-
-
-def validate_dish_choice(value):
-    """
-    From inside the try converts value to integer.
-    Raises ValueError if value is not an integer
-    between 1 and and recipes list length.
-    """
-    list_len = len(choose_meals.recipes_list)
-    try:
-        if int(value) < 0 or int(value) >= list_len + 1:
-            raise ValueError(
-                f'Pick a number between 1 and {list_len}, you choose {value}'
+                f'Pick a number between 1 and {length},'
+                f' you choose {int(value)}'
             )
     except ValueError as e:
         print(f'Invalid data: {e}, please try again.\n')
