@@ -1,6 +1,5 @@
 """Import module used to access google sheets"""
 import gspread
-
 from google.oauth2.service_account import Credentials
 
 SCOPE = [
@@ -33,7 +32,9 @@ def choose_meals():
             print('Data is valid!')
             break
 
-    get_dish_type(int_choice)
+    recipes_dict = get_dish_type(int_choice)
+    print('Plese type recipe number to add it to groceries list.\n')
+    print(recipes_dict)
 
 
 def validate_data(value):
@@ -69,8 +70,8 @@ def get_dish_type(dish_type):
     meals_list = SHEET.worksheet(dish_type)
     data = meals_list.col_values(1)
     number = [num for num in range(1, len(data) + 1)]
-    recipes_dict = dict(zip(data, number))
-    print(recipes_dict)
+
+    return dict(zip(data, number))
 
 
 choose_meals()
