@@ -29,12 +29,15 @@ def choose_meals():
 
         if validate_data(user_choice):
             int_choice = int(user_choice)
-            print('Data is valid!')
+            str_user_choice = get_dish_type(int_choice)
+            print(f'You choose {str_user_choice}\n')
             break
 
-    recipes_dict = get_dish_type(int_choice)
+    recipes_dict = create_dict_recipes(str_user_choice)
     print('Plese type recipe number to add it to groceries list.\n')
-    print(recipes_dict)
+    print(f'{recipes_dict}\n')
+    dish_choice = input('Enter your choice here: ')
+    print(dish_choice)
 
 
 def validate_data(value):
@@ -56,7 +59,7 @@ def validate_data(value):
 
 def get_dish_type(dish_type):
     """
-    Get list of recipes of choosen type and organize it in a dictionary.
+    Convert int into str.
     """
     if dish_type == 1:
         dish_type = 'vegetarian_recipes'
@@ -67,11 +70,24 @@ def get_dish_type(dish_type):
     elif dish_type == 4:
         dish_type = 'fish_recipes'
 
-    meals_list = SHEET.worksheet(dish_type)
+    return dish_type
+
+
+def create_dict_recipes(recipe_type):
+    """
+    Get recipes of a kind and create a dictionary.
+    """
+    meals_list = SHEET.worksheet(recipe_type)
     data = meals_list.col_values(1)
     number = [num for num in range(1, len(data) + 1)]
 
     return dict(zip(data, number))
+
+
+def add_dish_to_groceries_list():
+    """
+    Add dish to groceries.
+    """
 
 
 choose_meals()
