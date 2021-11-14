@@ -13,6 +13,9 @@ SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('easy_groceries')
 
+# global variable
+groceries_list = []
+
 
 def choose_meals():
     """
@@ -32,7 +35,8 @@ def choose_meals():
         if validate_data(user_choice, 4):
             int_choice = int(user_choice)
             str_user_choice = get_dish_type(int_choice)
-            print(f'You choose {str_user_choice}\n')
+            user_choice_split = str_user_choice.split('_')
+            print(f'{user_choice_split[0].capitalize()} {user_choice_split[1]} selected.\n')
             break
 
     while True:
@@ -45,8 +49,11 @@ def choose_meals():
         dish_choice = input('Enter your choice here: ')
 
         if validate_data(dish_choice, list_len):
-            print(choose_meals.recipes_list[int(dish_choice) - 1])
+            print(f'Adding {dish_choice} to groceries list...')
+            user_recipe_pick = choose_meals.recipes_list[int(dish_choice) - 1]
             break
+
+    add_dish_to_groceries_list(user_recipe_pick)
 
 
 def validate_data(value, length):
@@ -95,10 +102,23 @@ def create_dict_recipes(recipe_type):
     return dict(zip(data, number))
 
 
-def add_dish_to_groceries_list():
+def add_dish_to_groceries_list(picked_meal):
     """
-    Add dish to groceries.
+    Add dish to groceries list.
     """
+    while True:
+        groceries_list.append(picked_meal)
+        print('Would you like to add another meal?\n')
+
+        user_answer = input('Type 1 for Yes or 2 for No: ')
+
+        if validate_data(user_answer, 2):
+            print(f'You choose {user_answer}.')
+            if int(user_answer) == 1:
+                choose_meals()
+            elif int(user_answer) == 2:
+                print(groceries_list)
+            break
 
 
 choose_meals()
