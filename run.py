@@ -11,49 +11,64 @@ SCOPE = [
 CREDS = Credentials.from_service_account_file('creds.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
 GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
-SHEET = GSPREAD_CLIENT.open('easy_groceries')
+SHEET = GSPREAD_CLIENT.open('easy_grocery')
 
 # global variable
-groceries_list = []
+grocery_list = []
 
 
 def choose_meals():
     """
     Print dish type options to the user and get user choice.
     Validate input data.
-    Call function to create a recipes dict and display it to the user.
+    Call function to create a recipes dict.
+    Iterate over dictionary to access keys and display keys to the user.
     """
     while True:
-        print('Please select a dish type:')
+        print('Please select a dish type:\n')
         print('Type 1 for Vegetarian')
         print('Type 2 for Chicken')
         print('Type 3 for Beef')
-        print('Type 4 for Fish')
+        print('Type 4 for Fish\n')
 
         user_choice = input('Enter your option here: ')
+        print('')
 
         if validate_data(user_choice, 4):
             int_choice = int(user_choice)
             str_user_choice = get_dish_type(int_choice)
             user_choice_split = str_user_choice.split('_')
-            print(f'{user_choice_split[0].capitalize()} {user_choice_split[1]} selected.\n')
+            first_word = user_choice_split[0].capitalize()
+            second_word = user_choice_split[1].capitalize()
+            print(f'{first_word} {second_word} selected.\n')
             break
 
     while True:
         recipes_dict = create_dict_recipes(str_user_choice)
         choose_meals.recipes_list = list(recipes_dict.keys())
         list_len = len(choose_meals.recipes_list)
-        print('Plese type recipe value number to add it to groceries list.\n')
-        print(f'{recipes_dict}\n')
+        print('Please select a recipe to add it to the Grocery List.\n')
 
-        dish_choice = input('Enter your choice here: ')
+        for key in recipes_dict:
+            key_str = key.split('_')
+            first_word = key_str[0].capitalize()
+            second_word = key_str[1].capitalize()
+            print(f'Press {recipes_dict[key]} for {first_word} {second_word}.')
+        print('')
+        dish_choice = input('Enter your option here: ')
+        print('')
 
         if validate_data(dish_choice, list_len):
-            print(f'Adding {dish_choice} to groceries list...')
+            recipe_str = [word for word, num in recipes_dict.items() if num == int(dish_choice)]
+            key_str = recipe_str[0].split('_')
+            first_word = key_str[0].capitalize()
+            second_word = key_str[1].capitalize()
+            print(f'Adding {first_word} {second_word} to Grocery List...\n')
+            print(f'{first_word} {second_word} added.\n')
             user_recipe_pick = choose_meals.recipes_list[int(dish_choice) - 1]
             break
 
-    add_dish_to_groceries_list(user_recipe_pick)
+    add_dish_to_grocery_list(user_recipe_pick)
 
 
 def validate_data(value, length):
@@ -102,22 +117,26 @@ def create_dict_recipes(recipe_type):
     return dict(zip(data, number))
 
 
-def add_dish_to_groceries_list(picked_meal):
+def add_dish_to_grocery_list(picked_meal):
     """
-    Add dish to groceries list.
+    Add dish to Grocery list.
+    Call choose_meals function if user wants to add another meal.
     """
     while True:
-        groceries_list.append(picked_meal)
+        grocery_list.append(picked_meal)
         print('Would you like to add another meal?\n')
 
-        user_answer = input('Type 1 for Yes or 2 for No: ')
+        user_answer = input('Type 1 for YES or 2 for NO: ')
 
         if validate_data(user_answer, 2):
-            print(f'You choose {user_answer}.')
             if int(user_answer) == 1:
+                print('')
+                print('Retrieving recipes list...\n')
                 choose_meals()
             elif int(user_answer) == 2:
-                print(groceries_list)
+                print('')
+                print('Generating Grocery list...\n')
+                print(grocery_list)
             break
 
 
