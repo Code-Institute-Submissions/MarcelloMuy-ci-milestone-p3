@@ -14,6 +14,11 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('easy_grocery')
 
 # global variable
+
+# List of recipes
+grocery_recipe_list = []
+
+# List of ingredients
 grocery_list = []
 
 
@@ -119,11 +124,12 @@ def create_dict_recipes(recipe_type):
 
 def add_dish_to_grocery_list(picked_meal):
     """
-    Add dish to Grocery list.
+    Add dish to Grocery recipe list.
     Call choose_meals function if user wants to add another meal.
+    Call generate_grocery_list if user don't want to add another meal.
     """
     while True:
-        grocery_list.append(picked_meal)
+        grocery_recipe_list.append(picked_meal)
         print('Would you like to add another meal?\n')
 
         user_answer = input('Type 1 for YES or 2 for NO: ')
@@ -136,8 +142,20 @@ def add_dish_to_grocery_list(picked_meal):
             elif int(user_answer) == 2:
                 print('')
                 print('Generating Grocery list...\n')
-                print(grocery_list)
+                generate_grocery_list(grocery_recipe_list)
             break
+
+
+def generate_grocery_list(recipe):
+    """
+    Use list of recipes to get list of ingredients from google sheets.
+    """
+    print(recipe)
+
+    for meal in recipe:
+        ingredients = SHEET.worksheet(meal)
+        data = ingredients.row_values(1)
+        print(data)
 
 
 choose_meals()
