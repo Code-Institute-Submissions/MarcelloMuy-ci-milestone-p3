@@ -36,7 +36,7 @@ def choose_meals():
         print('Type 3 for Beef')
         print('Type 4 for Fish\n')
 
-        user_choice = input('Enter your option here: ')
+        user_choice = input('Enter your option here:\n')
         print('')
 
         if validate_data(user_choice, 4):
@@ -60,7 +60,7 @@ def choose_meals():
             second_word = key_str[1].capitalize()
             print(f'Press {recipes_dict[key]} for {first_word} {second_word}.')
         print('')
-        dish_choice = input('Enter your option here: ')
+        dish_choice = input('Enter your option here:\n')
         print('')
 
         if validate_data(dish_choice, list_len):
@@ -132,7 +132,7 @@ def add_dish_to_grocery_list(picked_meal):
         grocery_recipe_list.append(picked_meal)
         print('Would you like to add another meal?\n')
 
-        user_answer = input('Type 1 for YES or 2 for NO: ')
+        user_answer = input('Type 1 for YES or 2 for NO:\n')
 
         if validate_data(user_answer, 2):
             if int(user_answer) == 1:
