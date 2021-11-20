@@ -42,10 +42,8 @@ def choose_meals():
         if validate_data(user_choice, 4):
             int_choice = int(user_choice)
             str_user_choice = get_dish_type(int_choice)
-            user_choice_split = str_user_choice.split('_')
-            first_word = user_choice_split[0].capitalize()
-            second_word = user_choice_split[1].capitalize()
-            print(f'{first_word} {second_word} selected.\n')
+            words = format_string(str_user_choice)
+            print(f'{words[0]} {words[1]} selected.\n')
             break
 
     while True:
@@ -55,21 +53,19 @@ def choose_meals():
         print('Please select a recipe to add it to the Grocery List.\n')
 
         for key in recipes_dict:
-            key_str = key.split('_')
-            first_word = key_str[0].capitalize()
-            second_word = key_str[1].capitalize()
-            print(f'Press {recipes_dict[key]} for {first_word} {second_word}.')
+            words = format_string(key)
+            print(f'Press {recipes_dict[key]} for {words[0]} {words[1]}.')
         print('')
         dish_choice = input('Enter your option here:\n')
         print('')
 
         if validate_data(dish_choice, list_len):
-            recipe_str = [word for word, num in recipes_dict.items() if num == int(dish_choice)]
-            key_str = recipe_str[0].split('_')
-            first_word = key_str[0].capitalize()
-            second_word = key_str[1].capitalize()
-            print(f'Adding {first_word} {second_word} to Grocery List...\n')
-            print(f'{first_word} {second_word} added.\n')
+            recipe_str = [
+                word for word, num in recipes_dict.items() if num == int(dish_choice)
+            ]
+            words = format_string(recipe_str[0])
+            print(f'Adding {words[0]} {words[1]} to Grocery List...\n')
+            print(f'{words[0]} {words[1]} added.\n')
             user_recipe_pick = choose_meals.recipes_list[int(dish_choice) - 1]
             break
 
@@ -93,6 +89,17 @@ def validate_data(value, length):
         return False
 
     return True
+
+
+def format_string(word):
+    """
+    Format string into two separated and capitalized words
+    """
+    user_choice_split = word.split('_')
+    first_word = user_choice_split[0].capitalize()
+    second_word = user_choice_split[1].capitalize()
+    words = [first_word, second_word]
+    return words
 
 
 def get_dish_type(dish_type):
@@ -154,7 +161,7 @@ def generate_grocery_list(recipe):
 
     for meal in recipe:
         ingredients = SHEET.worksheet(meal)
-        data = ingredients.row_values(1)
+        data = ingredients.col_values(1)
         print(data)
 
 
