@@ -1,6 +1,7 @@
 """Import module used to access google sheets"""
 import gspread
 from google.oauth2.service_account import Credentials
+from contextlib import suppress
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -50,7 +51,7 @@ def choose_meals():
         recipes_dict = create_dict_recipes(str_user_choice)
         choose_meals.recipes_list = list(recipes_dict.keys())
         list_len = len(choose_meals.recipes_list)
-        print('Please select a recipe to add it to the Grocery List.\n')
+        print('Please select a recipe to add it to the Grocery List:\n')
 
         for key in recipes_dict:
             words = format_string(key)
@@ -133,7 +134,10 @@ def add_dish_to_grocery_list(picked_meal):
     """
     Add dish to Grocery recipe list.
     Call choose_meals function if user wants to add another meal.
-    Call generate_grocery_list if user don't want to add another meal.
+    Call check_stock if user wants to check stock
+    before generate shopping list.
+    Call generate_grocery_list if user want to proceed
+    without checking the stock.
     """
     while True:
         grocery_recipe_list.append(picked_meal)
@@ -147,10 +151,60 @@ def add_dish_to_grocery_list(picked_meal):
                 print('Retrieving recipes list...\n')
                 choose_meals()
             elif int(user_answer) == 2:
-                print('')
-                print('Generating Grocery list...\n')
-                generate_grocery_list(grocery_recipe_list)
+                while True:
+                    print('')
+                    print('Would you like to check stock before grocery list is created?\n')
+                    user_answer = input('Type 1 for YES or 2 for NO:\n')
+
+                    if validate_data(user_answer, 2):
+                        if int(user_answer) == 1:
+                            print('')
+                            print('Checking stock...\n')
+                            check_stock(grocery_recipe_list)
+                        elif int(user_answer) == 2:
+                            print('')
+                            print('Generating Grocery list...')
+                            generate_grocery_list(grocery_recipe_list)
+                        break
             break
+
+
+def check_stock(recipe):
+    """
+    Iterates through lists and dictionaries
+    to create a list of ingredients that are in the recipes and in the stock.
+    Iterates through stock and get the quantity of each ingredient.
+    """
+    stock = SHEET.worksheet('stock')
+    in_stock = []
+    for one_recipe in recipe:
+        ingredients = SHEET.worksheet(one_recipe)
+        ingredients_col = ingredients.col_values(1)
+        stock_col = stock.col_values(1)
+        for one_ingredient_stock in stock_col[1:]:
+            for one_ingredient_recipe in ingredients_col[1:]:
+                if one_ingredient_stock == one_ingredient_recipe:
+                    in_stock.append(one_ingredient_stock)
+
+    print(recipe)
+    print(in_stock)
+
+    stock_quantity = stock.get_all_records()
+    for dic in stock_quantity:
+        for stock in in_stock:
+            if stock in dic.values():
+                for value in dic.values():
+                    integer = convert_to_int(value)
+                    if isinstance(integer, int):
+                        print(value)
+
+
+def convert_to_int(string):
+    """
+    Converts a string into int or ignore it.
+    """
+    with suppress(Exception):
+        return int(string)
 
 
 def generate_grocery_list(recipe):
