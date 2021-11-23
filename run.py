@@ -1,8 +1,7 @@
 """Import module used to access google sheets"""
-import gspread
+from contextlib import suppress  # module used in convert_to_int function.
 from google.oauth2.service_account import Credentials
-from contextlib import suppress
-
+import gspread
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
@@ -32,10 +31,10 @@ def choose_meals():
     """
     while True:
         print('Please select a dish type:\n')
-        print('Type 1 for Vegetarian')
-        print('Type 2 for Chicken')
-        print('Type 3 for Beef')
-        print('Type 4 for Fish\n')
+        print('Press 1 for Vegetarian')
+        print('Press 2 for Chicken')
+        print('Press 3 for Beef')
+        print('Press 4 for Fish\n')
 
         user_choice = input('Enter your option here:\n')
         print('')
@@ -55,7 +54,7 @@ def choose_meals():
 
         for key in recipes_dict:
             words = format_string(key)
-            print(f'Press {recipes_dict[key]} for {words[0]} {words[1]}.')
+            print(f'Press {recipes_dict[key]} for {words[0]} {words[1]}')
         print('')
         dish_choice = input('Enter your option here:\n')
         print('')
@@ -160,7 +159,8 @@ def add_dish_to_grocery_list(picked_meal):
                         if int(user_answer) == 1:
                             print('')
                             print('Checking stock...\n')
-                            check_stock(grocery_recipe_list)
+                            stock_list = check_stock(grocery_recipe_list)
+                            print(stock_list)
                         elif int(user_answer) == 2:
                             print('')
                             print('Generating Grocery list...')
@@ -174,9 +174,12 @@ def check_stock(recipe):
     Iterates through lists and dictionaries
     to create a list of ingredients that are in the recipes and in the stock.
     Iterates through stock and get the quantity of each ingredient.
+    Return a dictionary of ingredients and quantity that are already in stock
+    and should be deleted from grocery list.
     """
     stock = SHEET.worksheet('stock')
-    in_stock = []
+    in_stock = []  # List of ingredients.
+    quantity_in_stock = []  # list with quantity of each ingredient.
     for one_recipe in recipe:
         ingredients = SHEET.worksheet(one_recipe)
         ingredients_col = ingredients.col_values(1)
@@ -186,9 +189,6 @@ def check_stock(recipe):
                 if one_ingredient_stock == one_ingredient_recipe:
                     in_stock.append(one_ingredient_stock)
 
-    print(recipe)
-    print(in_stock)
-
     stock_quantity = stock.get_all_records()
     for dic in stock_quantity:
         for stock in in_stock:
@@ -196,7 +196,9 @@ def check_stock(recipe):
                 for value in dic.values():
                     integer = convert_to_int(value)
                     if isinstance(integer, int):
-                        print(value)
+                        quantity_in_stock.append(value)
+
+    return dict(zip(in_stock, quantity_in_stock))
 
 
 def convert_to_int(string):
