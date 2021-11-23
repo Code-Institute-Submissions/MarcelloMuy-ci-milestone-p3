@@ -160,7 +160,7 @@ def add_dish_to_grocery_list(picked_meal):
                             print('')
                             print('Checking stock...\n')
                             stock_list = check_stock(grocery_recipe_list)
-                            print(stock_list)
+                            update_grocery_list(stock_list)
                         elif int(user_answer) == 2:
                             print('')
                             print('Generating Grocery list...')
@@ -209,16 +209,33 @@ def convert_to_int(string):
         return int(string)
 
 
+def update_grocery_list(stock_list):
+    print(grocery_list)
+    print(stock_list)
+
+
 def generate_grocery_list(recipe):
     """
     Use list of recipes to get list of ingredients from google sheets.
     """
-    print(recipe)
-
-    for meal in recipe:
+    list_of_ingredients = []
+    quantity_of_ingredients = []
+    units = []
+    for meal in recipe:  # Iterates through list of recipes.dict()
+        number_of_meals = recipe.count(meal)
         ingredients = SHEET.worksheet(meal)
-        data = ingredients.col_values(1)
-        print(data)
+        data = ingredients.get_all_values()
+        for item in data[1:]:  # Iterates through recipes and get ingredients.
+            list_of_ingredients.append(item[0])
+            units.append(item[2])
+            if number_of_meals > 1:  # Check if a meal was added more than one time
+                quantity_of_ingredients.append(float(item[1]) * number_of_meals)
+            elif number_of_meals == 1:
+                quantity_of_ingredients.append(float(item[1]))
+
+    dictionary = dict(zip(list_of_ingredients, quantity_of_ingredients))
+    print(dictionary)
+    print(units)
 
 
 choose_meals()
