@@ -61,7 +61,8 @@ def choose_meals():
 
         if validate_data(dish_choice, list_len):
             recipe_str = [
-                word for word, num in recipes_dict.items() if num == int(dish_choice)
+                word for word, num in recipes_dict.items()
+                if num == int(dish_choice)
             ]
             words = format_string(recipe_str[0])
             print(f'Adding {words[0]} {words[1]} to Grocery List...\n')
@@ -85,7 +86,9 @@ def validate_data(value, length):
                 f' you choose {int(value)}'
             )
     except ValueError:
-        print(f'Invalid data: choose between 1 and {length}, please try again.\n')
+        print(
+            f'Invalid data: choose between 1 and {length}, please try again.\n'
+        )
         return False
 
     return True
@@ -152,7 +155,9 @@ def add_dish_to_grocery_list(picked_meal):
             elif int(user_answer) == 2:
                 while True:
                     print('')
-                    print('Would you like to check stock before grocery list is created?\n')
+                    print(
+                        'Would you like to use ingredients in stock?'
+                    )
                     user_answer = input('Type 1 for YES or 2 for NO:\n')
 
                     if validate_data(user_answer, 2):
@@ -160,8 +165,8 @@ def add_dish_to_grocery_list(picked_meal):
                             print('')
                             print('Checking stock...\n')
                             stock_list = check_stock(grocery_recipe_list)
-                            grocery_generated = generate_grocery_list(grocery_recipe_list)
-                            update_grocery_list(stock_list, grocery_generated)
+                            grocry = generate_grocery_list(grocery_recipe_list)
+                            update_grocery_list(stock_list, grocry)
                         elif int(user_answer) == 2:
                             print('')
                             print('Generating Grocery list...')
@@ -199,7 +204,8 @@ def check_stock(recipes):
     for item in stock_quantity:
         for stock in in_stock:  # Iterates through stock.
             if stock in item.values():
-                for value in item.values():  # Get quantity of ingredient in stock.
+                # Iterates over quantity of ingredient in stock.
+                for value in item.values():
                     integer = convert_to_int(value)
                     # Check if is an integer.
                     if isinstance(integer, int):
