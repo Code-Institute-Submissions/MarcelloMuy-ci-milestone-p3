@@ -54,7 +54,7 @@ def choose_meals():
 
         for key in recipes_dict:
             words = format_string(key)
-            print(f'Press {recipes_dict[key]} for {words[0]} {words[1]}')
+            print_words(words, recipes_dict[key])
         print('')
         dish_choice = input('Enter your option here:\n')
         print('')
@@ -65,12 +65,40 @@ def choose_meals():
                 if num == int(dish_choice)
             ]
             words = format_string(recipe_str[0])
-            print(f'Adding {words[0]} {words[1]} to Grocery List...\n')
-            print(f'{words[0]} {words[1]} added.\n')
+            print_words2(words)
             user_recipe_pick = choose_meals.recipes_list[int(dish_choice) - 1]
             break
 
     add_dish_to_grocery_list(user_recipe_pick)
+
+
+def print_words2(string):
+    """
+    Check how many words are in string and print related statement
+    """
+    if len(string) == 1:
+        print(f'Adding {string[0]} to Grocery List...\n')
+        print(f'{string[0]} added.\n')
+    elif len(string) == 2:
+        print(f'Adding {string[0]} {string[1]} to Grocery List...\n')
+        print(f'{string[0]} {string[1]} added.\n')
+    elif len(string) == 3:
+        print(
+            f'Adding {string[0]} {string[1]} {string[2]} to Grocery List...\n'
+        )
+        print(f'{string[0]} {string[1]} {string[2]} added.\n')
+
+
+def print_words(string, num_key):
+    """
+    Check how many words are in string and print related statement
+    """
+    if len(string) == 1:
+        print(f'Press {num_key} for {string[0]}')
+    elif len(string) == 2:
+        print(f'Press {num_key} for {string[0]} {string[1]}')
+    elif len(string) == 3:
+        print(f'Press {num_key} for {string[0]} {string[1]} {string[2]}')
 
 
 def validate_data(value, length):
@@ -82,12 +110,10 @@ def validate_data(value, length):
     try:
         if int(value) < 1 or int(value) > length:
             raise ValueError(
-                f'Pick a number between 1 and {length},'
-                f' you choose {int(value)}'
             )
     except ValueError:
         print(
-            f'Invalid data: choose between 1 and {length}, please try again.\n'
+            f'Invalid data: Choose between 1 and {length}, please try again.\n'
         )
         return False
 
@@ -98,11 +124,16 @@ def format_string(word):
     """
     Format string into two separated and capitalized words
     """
-    user_choice_split = word.split('_')
-    first_word = user_choice_split[0].capitalize()
-    second_word = user_choice_split[1].capitalize()
-    words = [first_word, second_word]
-    return words
+    result = []
+    if '_' in word:
+        user_choice_split = word.split('_')
+        for item in user_choice_split:
+            word = item.capitalize()
+            result.append(word)
+    else:
+        result.append(word.capitalize())
+
+    return result
 
 
 def get_dish_type(dish_type):
