@@ -84,8 +84,8 @@ def validate_data(value, length):
                 f'Pick a number between 1 and {length},'
                 f' you choose {int(value)}'
             )
-    except ValueError as e:
-        print(f'Invalid data: {e}, please try again.\n')
+    except ValueError:
+        print(f'Invalid data: choose between 1 and {length}, please try again.\n')
         return False
 
     return True
@@ -160,7 +160,8 @@ def add_dish_to_grocery_list(picked_meal):
                             print('')
                             print('Checking stock...\n')
                             stock_list = check_stock(grocery_recipe_list)
-                            update_grocery_list(stock_list)
+                            grocery_generated = generate_grocery_list(grocery_recipe_list)
+                            update_grocery_list(stock_list, grocery_generated)
                         elif int(user_answer) == 2:
                             print('')
                             print('Generating Grocery list...')
@@ -169,33 +170,40 @@ def add_dish_to_grocery_list(picked_meal):
             break
 
 
-def check_stock(recipe):
+def check_stock(recipes):
     """
     Iterates through lists and dictionaries
     to create a list of ingredients that are in the recipes and in the stock.
     Iterates through stock and get the quantity of each ingredient.
-    Return a dictionary of ingredients and quantity that are already in stock
+    Return a dictionary of ingredients and quantities that are already in stock
     and should be deleted from grocery list.
     """
     stock = SHEET.worksheet('stock')
-    in_stock = []  # List of ingredients.
-    quantity_in_stock = []  # list with quantity of each ingredient.
-    for one_recipe in recipe:
-        ingredients = SHEET.worksheet(one_recipe)
-        ingredients_col = ingredients.col_values(1)
-        stock_col = stock.col_values(1)
+    in_stock = []  # List of ingredients for recipes that are in stock.
+    quantity_in_stock = []  # List with quantity of each ingredient.
+    for recipe in recipes:  # Iterates with list of recipes.
+        one_recipe = SHEET.worksheet(recipe)
+        # Get ingredients in a recipe.
+        ingredients_col = one_recipe.col_values(1)
+        stock_col = stock.col_values(1)  # Get ingredients in stock.
         for one_ingredient_stock in stock_col[1:]:
             for one_ingredient_recipe in ingredients_col[1:]:
+                # Compare if ingredient is in stock.
                 if one_ingredient_stock == one_ingredient_recipe:
+                    # Add ingredient to list.
                     in_stock.append(one_ingredient_stock)
 
     stock_quantity = stock.get_all_records()
-    for dic in stock_quantity:
-        for stock in in_stock:
-            if stock in dic.values():
-                for value in dic.values():
+    print(stock_quantity)
+    # Iterates through list of dictionaries.
+    for item in stock_quantity:
+        for stock in in_stock:  # Iterates through stock.
+            if stock in item.values():
+                for value in item.values():  # Get quantity of ingredient in stock.
                     integer = convert_to_int(value)
+                    # Check if is an integer.
                     if isinstance(integer, int):
+                        # Add quantity to list.
                         quantity_in_stock.append(value)
 
     return dict(zip(in_stock, quantity_in_stock))
@@ -209,9 +217,27 @@ def convert_to_int(string):
         return int(string)
 
 
-def update_grocery_list(stock_list):
-    print(grocery_list)
+def update_grocery_list(stock_list, grocery_generated):
+    """
+    Compares stock with grocery list and update grocery list.
+    """
     print(stock_list)
+    print(grocery_generated)
+    # Iterates through groceries dictionary keys.
+    for key in list(grocery_generated[0].keys()):
+        # Iterates through stock dictionary keys.
+        for item in stock_list.keys():
+            if item == key:  # Check if we have the item in stock.
+                in_stock = grocery_generated[0][item]
+                print(in_stock)
+                # Update grocery list.
+                grocery_generated[0][item] = (in_stock - stock_list[key])
+                for value in list(grocery_generated[0].values()):
+                    if value <= 0:
+                        # Delete item if item is not needed in grocery list.
+                        del grocery_generated[0][item]
+
+    print(grocery_generated)
 
 
 def generate_grocery_list(recipe):
@@ -222,20 +248,20 @@ def generate_grocery_list(recipe):
     quantity_of_ingredients = []
     units = []
     for meal in recipe:  # Iterates through list of recipes.dict()
-        number_of_meals = recipe.count(meal)
+        num_of_meals = recipe.count(meal)
         ingredients = SHEET.worksheet(meal)
         data = ingredients.get_all_values()
         for item in data[1:]:  # Iterates through recipes and get ingredients.
             list_of_ingredients.append(item[0])
             units.append(item[2])
-            if number_of_meals > 1:  # Check if a meal was added more than one time
-                quantity_of_ingredients.append(float(item[1]) * number_of_meals)
-            elif number_of_meals == 1:
+            # Check if a meal was added more than one time
+            if num_of_meals > 1:
+                quantity_of_ingredients.append(float(item[1]) * num_of_meals)
+            elif num_of_meals == 1:
                 quantity_of_ingredients.append(float(item[1]))
 
     dictionary = dict(zip(list_of_ingredients, quantity_of_ingredients))
-    print(dictionary)
-    print(units)
+    return [dictionary, units]
 
 
 choose_meals()
