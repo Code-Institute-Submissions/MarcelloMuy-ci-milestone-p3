@@ -26,8 +26,9 @@ def choose_meals():
     """
     Print dish type options to the user and get user choice.
     Validate input data.
-    Call function to create a recipes dict.
-    Iterate over dictionary to access keys and display keys to the user.
+    Call function to create a recipes dictionary.
+    Iterate over dictionary to access keys.
+    Call print_words function to generate print statements.
     """
     while True:
         print('Please select a dish type:\n')
@@ -51,7 +52,7 @@ def choose_meals():
         choose_meals.recipes_list = list(recipes_dict.keys())
         list_len = len(choose_meals.recipes_list)
         print('Please select a recipe to add it to the Grocery List:\n')
-
+        # This part handles the selection of recipes from  choosen type.
         for key in recipes_dict:
             words = format_string(key)
             print_words(words, recipes_dict[key])
@@ -68,8 +69,11 @@ def choose_meals():
             print_words2(words)
             user_recipe_pick = choose_meals.recipes_list[int(dish_choice) - 1]
             break
-
-    add_dish_to_grocery_list(user_recipe_pick)
+    # Append choosen recipe to recipes list.
+    grocery_recipe_list.append(user_recipe_pick)
+    # This function will ask user if they want to add another meal
+    # controling the code flow.
+    another_meal()
 
 
 def print_words2(string):
@@ -163,9 +167,9 @@ def create_dict_recipes(recipe_type):
     return dict(zip(data, number))
 
 
-def add_dish_to_grocery_list(picked_meal):
+def another_meal():
     """
-    Add dish to Grocery recipe list.
+    Display picked recipes.
     Call choose_meals function if user wants to add another meal.
     Call check_stock if user wants to check stock
     before generate shopping list.
@@ -173,7 +177,11 @@ def add_dish_to_grocery_list(picked_meal):
     without checking the stock.
     """
     while True:
-        grocery_recipe_list.append(picked_meal)
+        print('You already picked:\n')
+        for word in grocery_recipe_list:
+            formated_word = format_string(word)
+            print(*formated_word)
+        print('\n')
         print('Would you like to add another meal?\n')
 
         user_answer = input('Type 1 for YES or 2 for NO:\n')
