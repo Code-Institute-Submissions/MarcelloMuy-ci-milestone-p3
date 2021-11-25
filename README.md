@@ -18,6 +18,37 @@ You can find the program live version by [clicking here!]( https://easy-grocery-
 
 ### Objectives:
 
+- I want to create a program that is easy to navigate.
+    - Was this achieved?
+        - Yes
+    - How was this achieved?
+        - This was achieved by using numbers as option keys, the user will choose between 1 and 2 for YES and NO questions and between 1 and 4 for dish types and dish recipes options.
+- I want the program to display the recipes by category.
+    - Was this achieved?
+        - Yes
+    - How was this achieved?
+        - This was achieved by creating dish type lists with the recipes names in the database. These lists can be accessed separately and have the recipes names extracted from it. 
+- I want the program to run in a loop asking the user if they want to add another meal.
+    - Was this achieved?
+        - Yes
+    - How was this achieved?
+        - After picking a meal the program will prompt the user if they want to add another meal 1 for YES or 2 for NO. If the user type 1 it will go back to the dish type selection screen. If the user type 2 it will finish the recipes selection phase. 
+- I want the program to display on screen the recipes that have already been picked when asking the user to add another meal.
+    - Was this achieved?
+        - Yes
+    - How was this achieved?
+        - By placing a for loop with a print statement inside the while True loop in the another_meal() function that handles this part of the code.
+- I want the program to give the user the option to have the full grocery list or have an updated list with the ingredients in stock removed from it.
+    - Was this achieved?
+        - Yes
+    - How was this achieved?
+        - After selecting meals, the program will ask if user wants to check the stock before generating grocery list 1 for YES or 2 for NO. If 1 is selected the program will compare the full grocery list against the ingredients in stock and generate the updated list. If 2 is selected a full grocery list with no adjustments will be generated.
+- I want the program to display to the user what is in stock.
+    - Was this achieved?
+        - 
+    - How was this achieved?
+        - This was achieved by using...
+
 
 ### Changes throughout the process:
 
