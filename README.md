@@ -1,31 +1,31 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+# EasyGrocery Project
 
-Welcome MarcelloMuy,
+EasyGrocery
+In this project I tried to create a grocery list generator using Python language and google sheets as a database. The user would choose recipes from a selection of recipes the program would generate a grocery list with all the necessary ingredients based in the user’s choice of recipes.
+The program also gives the user the choice to check a stock before generating the list making the process of figuring out what ingredients should you buy and what you already have in stock a lot easier. 
 
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **August 17, 2021**
+You can find the program live version by [clicking here!]( https://easy-grocery-marcellomuy.herokuapp.com/)
 
-## Reminders
+##Table of contents
+1. [Plans and structure](#plans-and-structure)
+    - [Objectives](#objectives)
+	- [Changes throughout the process](#changes-throughout-the-process)
+    - [Flowchart](#flowchart)
 
-* Your code must be placed in the `run.py` file
-* Your dependencies must be placed in the `requirements.txt` file
-* Do not edit any of the other files or your code may not deploy properly
+## Plans and structure 
 
-## Creating the Heroku app
+<img src="images/" alt="Screenshot">  
 
-When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
+### Objectives:
 
-1. `heroku/python`
-2. `heroku/nodejs`
 
-You must then create a _Config Var_ called `PORT`. Set this to `8000`
+### Changes throughout the process:
 
-If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
+- Initially I have the idea to create a program that would have the stock database updated after an ingredient was used for a recipe, due to the limit of time and security reasons I decided to keep the data base read only.
 
-Connect your GitHub repository and deploy as normal.
+- I had plans to give the user the option to add new recipes, but this function was also not added due to the reasons above.
 
-## Constraints
+### Flowchart:
 
-The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
 
------
-Happy coding!
+Go back to [Table of contents](#table-of-contents)
