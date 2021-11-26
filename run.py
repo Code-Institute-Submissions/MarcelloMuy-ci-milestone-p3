@@ -24,6 +24,46 @@ grocery_recipe_list = []
 grocery_list = []
 
 
+def run_program():
+    """
+    Run welcoming message and the initial menu.
+    Validates input data.
+    Calls respective functions.
+    """
+    while True:
+        print('')
+        print('Welcome to EasyGrocery!\n')
+        print(
+            'EasyGrocery will help you to generate your weekly grocery list.\n'
+            )
+        print('You only need to add the recipes you want to cook this week,')
+        print('and we will create a grocery list for you.\n')
+        print('You decide if you want to generate a complete grocery list or')
+        print(
+            'if you want to use the ingredients you have already in stock.\n'
+            )
+        print('Press 1 to pick your meals or 2 to see your stock:\n')
+
+        first_user_choice = input('Enter your option here:\n')
+
+        if validate_data(first_user_choice, 2):
+            if int(first_user_choice) == 1:
+                print('Loading recipes selection...\n')
+                choose_meals()
+                break
+            elif int(first_user_choice) == 2:
+                print('Loading stock...\n')
+                see_stock()
+                break
+
+
+def see_stock():
+    """
+    Check stock fucntion.
+    """
+    print('This is the stock!')
+
+
 def choose_meals():
     """
     Print dish type options to the user and get user choice.
@@ -351,4 +391,4 @@ def display_list(grocery_list_display):
     print(tabulate(final_grocery_list, headers='firstrow'))
 
 
-choose_meals()
+run_program()
