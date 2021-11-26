@@ -205,9 +205,10 @@ def another_meal():
                         if int(user_answer) == 1:
                             print('')
                             print('Checking stock...\n')
-                            stock_list = check_stock(grocery_recipe_list)
+                            stck_li = check_stock(grocery_recipe_list)
                             grocry = generate_grocery_list(grocery_recipe_list)
-                            update_grocery_list(stock_list, grocry)
+                            gro_updated = update_grocery_list(stck_li, grocry)
+                            display_list(gro_updated)
                         elif int(user_answer) == 2:
                             print('')
                             print('Generating Grocery list...')
@@ -242,7 +243,6 @@ def check_stock(recipes):
                     in_stock.append(one_ingredient_stock)
 
     stock_quantity = stock.get_all_records()
-    print(stock_quantity)
     # Iterates through list of dictionaries.
     for item in stock_quantity:
         for stock in in_stock:  # Iterates through stock.
@@ -270,7 +270,6 @@ def update_grocery_list(stock_list, grocery_generated):
     """
     Compares stock with grocery list and update grocery list.
     """
-    print(grocery_generated)
     # Iterates through groceries dictionary keys.
     for key in list(grocery_generated[0].keys()):
         # Iterates through stock dictionary keys.
@@ -283,6 +282,8 @@ def update_grocery_list(stock_list, grocery_generated):
                     if value <= 0:
                         # Delete item if item is not needed in grocery list.
                         del grocery_generated[0][item]
+                        del grocery_generated[1][item]
+    return grocery_generated
 
 
 def generate_grocery_list(recipe):
