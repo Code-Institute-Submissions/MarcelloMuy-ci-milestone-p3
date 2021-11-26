@@ -1,5 +1,7 @@
 """Import module used to access google sheets"""
 from contextlib import suppress  # module used in convert_to_int function.
+# Madule used to create a table in display_list function.
+from tabulate import tabulate
 from google.oauth2.service_account import Credentials
 import gspread
 SCOPE = [
@@ -268,7 +270,6 @@ def update_grocery_list(stock_list, grocery_generated):
     """
     Compares stock with grocery list and update grocery list.
     """
-    print(stock_list)
     print(grocery_generated)
     # Iterates through groceries dictionary keys.
     for key in list(grocery_generated[0].keys()):
@@ -276,15 +277,12 @@ def update_grocery_list(stock_list, grocery_generated):
         for item in stock_list.keys():
             if item == key:  # Check if we have the item in stock.
                 in_stock = grocery_generated[0][item]
-                print(in_stock)
                 # Update grocery list.
                 grocery_generated[0][item] = (in_stock - stock_list[key])
                 for value in list(grocery_generated[0].values()):
                     if value <= 0:
                         # Delete item if item is not needed in grocery list.
                         del grocery_generated[0][item]
-
-    print(grocery_generated)
 
 
 def generate_grocery_list(recipe):
@@ -316,14 +314,40 @@ def display_list(grocery_list_display):
     """
     Iterates through dictionaries and displays data to the user.
     """
+    final_grocery_list = []
     # Dictionary with ingredients names and quantities.
     dict1 = grocery_list_display[0].items()
-    # Dictionary with ingredients names and units. 
+    # Dictionary with ingredients names and units.
     dict2 = grocery_list_display[1].items()
-    for (ingr, quant), (ingr2, unit) in zip(dict1, dict2):
+    # Append headers to grocery list.
+    final_grocery_list.append(['Ingredients', 'Quantity', 'Unit'])
 
-        print(f'{ingr} and {quant}')
-        print(f'{ingr2} and {unit}')
+    for (ingr, quant), (ingr2, unit) in zip(dict1, dict2):
+        one_list = []
+        # Format strings.
+        f_ingr = format_string(ingr)
+        f_unit = format_string(unit)
+        if len(f_ingr) > 1:  # Checks if recipe name has more than one word.
+            new_word = ' '.join(f_ingr)
+            # Check quantity and unit to make it plural or not.
+            if quant > 1 and f_unit[0][-1] != 's':
+                f_unit = ''.join((*f_unit, 's'))
+                one_list.extend([new_word, quant, f_unit])
+            else:
+                one_list.extend([new_word, quant, *f_unit])
+        else:
+            # Check quantity and unit to make it plural or not.
+            if quant > 1 and f_unit[0][-1] != 's':
+                f_unit = ''.join((*f_unit, 's'))
+                one_list.extend([*f_ingr, quant, f_unit])
+            else:
+                one_list.extend([*f_ingr, quant, *f_unit])
+
+        # Append list with ingr, quant and unit formated and ready to use.
+        final_grocery_list.append(one_list)
+
+    # Create a table and display it.
+    print(tabulate(final_grocery_list, headers='firstrow'))
 
 
 choose_meals()
