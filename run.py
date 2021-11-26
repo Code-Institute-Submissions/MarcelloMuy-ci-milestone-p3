@@ -209,7 +209,9 @@ def another_meal():
                         elif int(user_answer) == 2:
                             print('')
                             print('Generating Grocery list...')
-                            generate_grocery_list(grocery_recipe_list)
+                            g_list = grocery_recipe_list
+                            full_grocery_list = generate_grocery_list(g_list)
+                            display_list(full_grocery_list)
                         break
             break
 
@@ -305,8 +307,23 @@ def generate_grocery_list(recipe):
             elif num_of_meals == 1:
                 quantity_of_ingredients.append(float(item[1]))
 
-    dictionary = dict(zip(list_of_ingredients, quantity_of_ingredients))
-    return [dictionary, units]
+    dict_value_quant = dict(zip(list_of_ingredients, quantity_of_ingredients))
+    dict_value_unit = dict(zip(list_of_ingredients, units))
+    return [dict_value_quant, dict_value_unit]
+
+
+def display_list(grocery_list_display):
+    """
+    Iterates through dictionaries and displays data to the user.
+    """
+    # Dictionary with ingredients names and quantities.
+    dict1 = grocery_list_display[0].items()
+    # Dictionary with ingredients names and units. 
+    dict2 = grocery_list_display[1].items()
+    for (ingr, quant), (ingr2, unit) in zip(dict1, dict2):
+
+        print(f'{ingr} and {quant}')
+        print(f'{ingr2} and {unit}')
 
 
 choose_meals()
