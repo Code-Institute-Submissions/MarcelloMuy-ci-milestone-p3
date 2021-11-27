@@ -1,9 +1,16 @@
-"""Import module used to access google sheets"""
+"""
+Import modules used to access google sheets, tabulate and colorama
+"""
 from contextlib import suppress  # module used in convert_to_int function.
-# Madule used to create a table in display_list function.
+# Module used to create a table in display_list function.
 from tabulate import tabulate
+# Import gspread module
 from google.oauth2.service_account import Credentials
 import gspread
+# Import colorama module
+import colorama
+from colorama import Fore, Back, Style
+colorama.init(autoreset=True)
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
@@ -36,9 +43,9 @@ def run_program():
     grocery_list = []
     while True:
         print('')
-        print('Welcome to EasyGrocery!\n')
+        print(Fore.GREEN + 'Welcome to' + Style.BRIGHT + ' EasyGrocery!')
         print('Your grocery list generator.\n')
-        print('Would you like to see the instructions?')
+        print(Fore.CYAN + 'Would you like to see the instructions?')
         print('Press 1 for YES or 2 for NO:\n')
 
         instr_user_choice = input('Enter your option here:\n')
@@ -55,8 +62,9 @@ def run_program():
                 break
 
     while True:
-        print('')
-        print('Press 1 to pick your meals or 2 to see your stock:\n')
+        print(Fore.CYAN + 'What would you like to do?\n')
+        print('Press 1 to pick your meals.')
+        print('Press 2 to see your stock.\n')
 
         first_user_choice = input('Enter your option here:\n')
 
@@ -69,6 +77,7 @@ def run_program():
             elif int(first_user_choice) == 2:
                 print('')
                 print('Loading stock...\n')
+                print('This is what you have in stock:\n')
                 see_stock()
                 break
 
@@ -78,8 +87,9 @@ def instructions():
     Program Instructions
     """
     print('')
+    easy_grocery = Fore.GREEN + Style.BRIGHT + 'EasyGrocery ' + Style.RESET_ALL
     print(
-        'EasyGrocery will help you to generate your weekly grocery list.\n'
+        easy_grocery + 'will help you to generate your weekly grocery list.\n'
         )
     print('You only need to add the recipes you want to cook this week,')
     print('and we will create a grocery list for you.\n')
@@ -95,10 +105,11 @@ def see_stock():
     """
     invetory = SHEET.worksheet('stock')
     data = invetory.get_all_values()
-    print(tabulate(data, headers='firstrow'))
+    print(Fore.YELLOW + tabulate(data, headers='firstrow'))
 
     while True:
         print('')
+        print(Fore.CYAN + 'What would you like to do?\n')
         print('Press 1 to pick your meals.')
         print('Press 2 to restart the program\n')
 
@@ -107,7 +118,7 @@ def see_stock():
         if validate_data(from_stock_user_choice, 2):
             if int(from_stock_user_choice) == 1:
                 print('')
-                print('Loading recipes selection...\n')
+                print('Loading recipes...\n')
                 choose_meals()
                 break
             elif int(from_stock_user_choice) == 2:
@@ -126,7 +137,7 @@ def choose_meals():
     Call print_words function to generate print statements.
     """
     while True:
-        print('Please select a dish type:\n')
+        print(Fore.CYAN + 'Please select a dish type:\n')
         print('Press 1 for Vegetarian')
         print('Press 2 for Chicken')
         print('Press 3 for Beef')
@@ -146,7 +157,8 @@ def choose_meals():
         recipes_dict = create_dict_recipes(str_user_choice)
         choose_meals.recipes_list = list(recipes_dict.keys())
         list_len = len(choose_meals.recipes_list)
-        print('Please select a recipe to add it to the Grocery List:\n')
+        colo = Fore.CYAN
+        print(colo + 'Please select a recipe to add it to the Grocery List:\n')
         # This part handles the selection of recipes from  choosen type.
         for key in recipes_dict:
             words = format_string(key)
@@ -211,8 +223,10 @@ def validate_data(value, length):
             raise ValueError(
             )
     except ValueError:
+        please = ', please try again.\n'
+        print('')
         print(
-            f'Invalid data: Choose between 1 and {length}, please try again.\n'
+            f'{Fore.RED} Invalid data: Choose between 1 and {length}{please}'
         )
         return False
 
@@ -279,10 +293,10 @@ def another_meal():
 
         for word in grocery_recipe_list:
             formated_word = format_string(word)
-            bullet = '*'
+            bullet = Fore.YELLOW + '*'
             print(bullet, *formated_word)
         print('')
-        print('Would you like to add another meal?')
+        print(Fore.CYAN + 'Would you like to add another meal?')
 
         user_answer = input('Type 1 for YES or 2 for NO:\n')
 
@@ -294,8 +308,9 @@ def another_meal():
             elif int(user_answer) == 2:
                 while True:
                     print('')
+                    colo = Fore.CYAN
                     print(
-                        'Would you like to use ingredients in stock?'
+                        colo + 'Would you like to use ingredients in stock?'
                     )
                     user_answer = input('Type 1 for YES or 2 for NO:\n')
 
@@ -445,9 +460,9 @@ def display_list(grocery_list_display):
         # Append list with ingr, quant and unit formated and ready to use.
         final_grocery_list.append(one_list)
 
-    print('Your grocery list is ready!\n')
+    print(Fore.GREEN + 'Your grocery list is ready!\n')
     # Create a table and display it.
-    print(tabulate(final_grocery_list, headers='firstrow'))
+    print(Fore.YELLOW + tabulate(final_grocery_list, headers='firstrow'))
 
     thank_you()
 
@@ -459,7 +474,10 @@ def thank_you():
     """
     while True:
         print('')
-        print('Thank you for using EasyGrocery!\n')
+        bright = Style.BRIGHT
+        print(
+            'Thank you for using' + bright + Fore.GREEN + ' EasyGrocery!\n'
+            )
         print('If you want to create a new grocery list')
         print('press 1 to rerun the program.\n')
 
