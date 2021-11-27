@@ -9,7 +9,7 @@ from google.oauth2.service_account import Credentials
 import gspread
 # Import colorama module
 import colorama
-from colorama import Fore, Back, Style
+from colorama import Fore, Style
 colorama.init(autoreset=True)
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
