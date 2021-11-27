@@ -30,6 +30,10 @@ def run_program():
     Validates input data.
     Calls respective functions.
     """
+    global grocery_recipe_list
+    grocery_recipe_list = []
+    global grocery_list
+    grocery_list = []
     while True:
         print('')
         print('Welcome to EasyGrocery!\n')
@@ -87,9 +91,30 @@ def instructions():
 
 def see_stock():
     """
-    Check stock fucntion.
+    Get data from google sheets and display it to the user.
     """
-    print('This is the stock!')
+    invetory = SHEET.worksheet('stock')
+    data = invetory.get_all_values()
+    print(tabulate(data, headers='firstrow'))
+
+    while True:
+        print('')
+        print('Press 1 to pick your meals.')
+        print('Press 2 to restart the program\n')
+
+        from_stock_user_choice = input('Enter your option here:\n')
+
+        if validate_data(from_stock_user_choice, 2):
+            if int(from_stock_user_choice) == 1:
+                print('')
+                print('Loading recipes selection...\n')
+                choose_meals()
+                break
+            elif int(from_stock_user_choice) == 2:
+                print('')
+                print('Restarting the program...\n')
+                run_program()
+                break
 
 
 def choose_meals():
@@ -424,6 +449,8 @@ def display_list(grocery_list_display):
     # Create a table and display it.
     print(tabulate(final_grocery_list, headers='firstrow'))
 
+    thank_you()
+
 
 def thank_you():
     """
@@ -446,6 +473,3 @@ def thank_you():
 
 
 run_program()
-
-
-thank_you()
