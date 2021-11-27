@@ -33,28 +33,56 @@ def run_program():
     while True:
         print('')
         print('Welcome to EasyGrocery!\n')
-        print(
-            'EasyGrocery will help you to generate your weekly grocery list.\n'
-            )
-        print('You only need to add the recipes you want to cook this week,')
-        print('and we will create a grocery list for you.\n')
-        print('You decide if you want to generate a complete grocery list or')
-        print(
-            'if you want to use the ingredients you have already in stock.\n'
-            )
+        print('Your grocery list generator.\n')
+        print('Would you like to see the instructions?')
+        print('Press 1 for YES or 2 for NO:\n')
+
+        instr_user_choice = input('Enter your option here:\n')
+
+        if validate_data(instr_user_choice, 2):
+            if int(instr_user_choice) == 1:
+                print('')
+                print('Loading instructions...\n')
+                instructions()
+                break
+            elif int(instr_user_choice) == 2:
+                print('')
+                print('Loading program...\n')
+                break
+
+    while True:
+        print('')
         print('Press 1 to pick your meals or 2 to see your stock:\n')
 
         first_user_choice = input('Enter your option here:\n')
 
         if validate_data(first_user_choice, 2):
             if int(first_user_choice) == 1:
+                print('')
                 print('Loading recipes selection...\n')
                 choose_meals()
                 break
             elif int(first_user_choice) == 2:
+                print('')
                 print('Loading stock...\n')
                 see_stock()
                 break
+
+
+def instructions():
+    """
+    Program Instructions
+    """
+    print('')
+    print(
+        'EasyGrocery will help you to generate your weekly grocery list.\n'
+        )
+    print('You only need to add the recipes you want to cook this week,')
+    print('and we will create a grocery list for you.\n')
+    print('You decide if you want to generate a complete grocery list or')
+    print(
+        'if you want to use the ingredients you have already in stock.\n'
+        )
 
 
 def see_stock():
@@ -219,12 +247,17 @@ def another_meal():
     without checking the stock.
     """
     while True:
-        print('You already picked:\n')
+        if len(grocery_recipe_list) == 1:
+            print('Your chosen meal for the week is:\n')
+        else:
+            print('Your chosen meals for the week are:\n')
+
         for word in grocery_recipe_list:
             formated_word = format_string(word)
-            print(*formated_word)
-        print('\n')
-        print('Would you like to add another meal?\n')
+            bullet = '*'
+            print(bullet, *formated_word)
+        print('')
+        print('Would you like to add another meal?')
 
         user_answer = input('Type 1 for YES or 2 for NO:\n')
 
@@ -251,7 +284,7 @@ def another_meal():
                             display_list(gro_updated)
                         elif int(user_answer) == 2:
                             print('')
-                            print('Generating Grocery list...')
+                            print('Generating Grocery list...\n')
                             g_list = grocery_recipe_list
                             full_grocery_list = generate_grocery_list(g_list)
                             display_list(full_grocery_list)
@@ -387,8 +420,32 @@ def display_list(grocery_list_display):
         # Append list with ingr, quant and unit formated and ready to use.
         final_grocery_list.append(one_list)
 
+    print('Your grocery list is ready!\n')
     # Create a table and display it.
     print(tabulate(final_grocery_list, headers='firstrow'))
 
 
+def thank_you():
+    """
+    Display thank you message.
+    Ask the user if they want to rerun the program.
+    """
+    while True:
+        print('')
+        print('Thank you for using EasyGrocery!\n')
+        print('If you want to create a new grocery list')
+        print('press 1 to rerun the program.\n')
+
+        rerun_user_choice = input('Enter your option here:\n')
+
+        if validate_data(rerun_user_choice, 1):
+            print('')
+            print('Loading program...\n')
+            run_program()
+            break
+
+
 run_program()
+
+
+thank_you()
