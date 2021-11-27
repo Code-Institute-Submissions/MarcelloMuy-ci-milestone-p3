@@ -103,8 +103,32 @@ def see_stock():
     """
     Get data from google sheets and display it to the user.
     """
-    invetory = SHEET.worksheet('stock')
-    data = invetory.get_all_values()
+    inventory = SHEET.worksheet('stock')
+    data = inventory.get_all_values()
+    ingredients = inventory.col_values(1)
+    ingredients_formated_names = []
+    num = 0
+    for ingredient in ingredients:
+        formated_string = format_string(ingredient)
+
+        # Checks if ingredient has more than one word.
+        if len(formated_string) > 1:
+
+            new_word = ' '.join(formated_string)
+            print(new_word)
+            ingredients_formated_names.append([new_word])
+        ingredients_formated_names.append(formated_string)
+    # Make a list of list into a single list
+    flat_list = []
+    for sublist in ingredients_formated_names:
+        for item in sublist:
+            flat_list.append(item)
+
+    for item_list in data:
+        item_list[0] = flat_list[num]
+        if num < len(flat_list) - 1:
+            num += 1
+
     print(Fore.YELLOW + tabulate(data, headers='firstrow'))
 
     while True:
