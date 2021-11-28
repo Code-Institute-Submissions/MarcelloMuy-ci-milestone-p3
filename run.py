@@ -71,7 +71,7 @@ def run_program():
         if validate_data(first_user_choice, 2):
             if int(first_user_choice) == 1:
                 print('')
-                print('Loading recipes selection...\n')
+                print('Loading recipes...\n')
                 choose_meals()
                 break
             elif int(first_user_choice) == 2:
@@ -113,9 +113,7 @@ def see_stock():
 
         # Checks if ingredient has more than one word.
         if len(formated_string) > 1:
-
             new_word = ' '.join(formated_string)
-            print(new_word)
             ingredients_formated_names.append([new_word])
         ingredients_formated_names.append(formated_string)
     # Make a list of list into a single list
@@ -334,7 +332,7 @@ def another_meal():
                     print('')
                     colo = Fore.CYAN
                     print(
-                        colo + 'Would you like to use ingredients in stock?'
+                        colo + 'Would you like to use ingredients from stock?'
                     )
                     user_answer = input('Type 1 for YES or 2 for NO:\n')
 
