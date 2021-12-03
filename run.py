@@ -110,11 +110,10 @@ def see_stock():
     num = 0
     for ingredient in ingredients:
         formated_string = format_string(ingredient)
-
         # Checks if ingredient has more than one word.
         if len(formated_string) > 1:
             new_word = ' '.join(formated_string)
-            ingredients_formated_names.append([new_word])
+            formated_string = [new_word]
         ingredients_formated_names.append(formated_string)
     # Make a list of list into a single list
     flat_list = []
